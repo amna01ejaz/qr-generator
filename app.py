@@ -4,51 +4,65 @@ from PIL import Image
 import io
 
 # 1. Page Layout Configuration
-st.set_page_config(page_title="Codédex QR Generator", layout="centered")
-st.title("🔗 Instant Air QR Code Generator")
-st.write("Convert any URL, text message, or social media link into a scannable QR Code instantly!")
+st.set_page_config(page_title="Pro QR Generator", layout="centered")
+st.title("🎨 Customizable Professional QR Code Studio")
+st.write("Generate custom-colored scannable QR Codes for links, Wi-Fi details, or text text blocks.")
 
-# 2. Input Box for User Data
-user_input = st.text_input("👇 Enter your link or text here:", placeholder="https://github.com/amna01ejaz")
+# 2. Advanced Control Options split into columns
+col_in, col_style = st.columns([2, 1])
+
+with col_in:
+    st.subheader("1. Enter Your Content")
+    user_input = st.text_area(
+        "👇 Paste URL or Text content here:", 
+        placeholder="https://github.com/amna01ejaz",
+        height=115
+    )
+
+with col_style:
+    st.subheader("2. Design Styles")
+    # Custom color pickers
+    fill_color = st.color_picker("QR Pattern Color", "#000000")
+    back_color = st.color_picker("Background Color", "#FFFFFF")
 
 st.write("---")
 
 if user_input:
-    with st.spinner("Generating your QR Code..."):
-        # 3. Configure QR code sizing and design properties
+    with st.spinner("Compiling your designer QR Code..."):
+        # 3. Configure advanced parameters
         qr = qrcode.QRCode(
             version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            error_correction=qrcode.constants.ERROR_CORRECT_H, # Higher error correction for custom colors
             box_size=10,
             border=4,
         )
         qr.add_data(user_input)
         qr.make(fit=True)
 
-        # 4. Compile the QR matrix into an image map
-        img = qr.make_image(fill_color="black", back_color="white")
+        # 4. Compile with user chosen styling variables
+        img = qr.make_image(fill_color=fill_color, back_color=back_color)
         
-        # Convert PIL Image object to bytes so Streamlit can handle downloads
+        # Convert map format to bytes for display and export handling
         buf = io.BytesIO()
         img.save(buf, format="PNG")
         byte_im = buf.getvalue()
 
-        # 5. Display Layout columns
-        col1, col2 = st.columns([1, 2])
+        # 5. Output display grid layout
+        out_img, out_actions = st.columns([1, 1])
         
-        with col1:
-            st.image(byte_im, caption="Scan Me!", width=200)
+        with out_img:
+            st.image(byte_im, caption="Your Customized Asset", width=230)
             
-        with col2:
-            st.success("✨ QR Code generated successfully!")
-            st.write("Test it by pointing your mobile phone camera at the screen right now.")
+        with out_actions:
+            st.success("✨ Dynamic Render Successful!")
+            st.info("💡 **Tip:** Ensure there is enough contrast between your pattern and background colors so phone cameras can easily scan it.")
             
-            # 6. Streamlit Download Asset Wire-up
+            # Download asset trigger wire up
             st.download_button(
-                label="💾 Download QR Code (PNG)",
+                label="💾 Download Custom QR Code (PNG)",
                 data=byte_im,
-                file_name="my_codedex_qrcode.png",
+                file_name="custom_codedex_qr.png",
                 mime="image/png"
             )
 else:
-    st.info("💡 Type a link into the input box above to generate your dynamic QR image overlay!")
+    st.info("💡 Supply content inside the text area inputs to unlock your real-time styling matrix dashboard.")
